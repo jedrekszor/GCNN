@@ -1,43 +1,22 @@
 import torch
 from torchvision import transforms as T
-from env_variables import BATCH_SIZE, TRAINING_DIR, VALIDATION_DIR, TEST_DIR, IMG_SIZE
 import itertools
 import numpy as np
 import matplotlib.pyplot as plt
 
-
-def data_transforms(phase=None):
-    if phase == TRAINING_DIR:
-        data_T = T.Compose([
-            # T.Grayscale(),
-            T.Resize(size=(256, 256)),
-            T.RandomRotation(degrees=(-20, +20)),
-            T.CenterCrop(size=(IMG_SIZE, IMG_SIZE)),
-            T.ToTensor()
-        ])
-
-    elif phase == VALIDATION_DIR or phase == TEST_DIR:
-        data_T = T.Compose([
-            # T.Grayscale(),
-            T.Resize(size=(IMG_SIZE, IMG_SIZE)),
-            T.ToTensor()
-        ])
-
-    return data_T
 
 
 def validate(model, data, device, ce):  # accuracy
     valid_acc = 0.0
     valid_loss = 0.0
 
-    for i, (images, labels) in enumerate(data):
-        images = images.to(device)
-        labels = labels.to(device)
+    for batch in data:
+        batch.to(device, non_blocking=True)
 
-        pred = model(images)
-        loss = ce(pred, labels)
+        pred = model(batch.x, batch.edge_index, batch.batch)
+        loss = ce(pred, batch.y)
 
-        valid_acc += accuracy(pred, labels)
+        valid_acc += accuracy(pred, batch.y)
         valid_loss += float(loss)
 
     avg_valid_acc = valid_acc / len(data)

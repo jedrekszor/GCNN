@@ -1,16 +1,12 @@
 import torch
-import numpy as np
 import os
-import inspect
-import sys
-from env_variables import TRAINING_DIR, VALIDATION_DIR, TEST_DIR, BATCH_SIZE, MODEL_PATH
-from model import Net
+from src.env_variables import TRAINING_DIR, VALIDATION_DIR, TEST_DIR, BATCH_SIZE, MODEL_PATH
+from src.model import GCN
 import matplotlib.pyplot as plt
-import copy
 from torchvision.datasets import ImageFolder
 from torch.utils.data import DataLoader
 from sklearn.metrics import confusion_matrix
-from resources import validate, data_transforms, accuracy, save_wrong, plot_confusion_matrix
+from src.resources import validate, data_transforms, accuracy, save_wrong, plot_confusion_matrix
 
 MODEL_LOAD = "../models/resnet18/resnet18_24_acc_0.91_loss_0.24456"
 
@@ -27,7 +23,7 @@ loader_test = DataLoader(set_test, batch_size=BATCH_SIZE, shuffle=True, drop_las
 
 
 def evaluate():
-    cnn = Net().to(device)
+    cnn = GCN().to(device)
     cnn.load_state_dict(torch.load(MODEL_LOAD))
     ce = torch.nn.CrossEntropyLoss()
     if device.type == 'cuda':
