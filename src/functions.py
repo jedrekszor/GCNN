@@ -13,7 +13,7 @@ def validate(model, data, device, ce):
     for batch in data:
         batch.to(device, non_blocking=True)
 
-        pred = model(batch.x, batch.edge_index, batch.batch)
+        pred = model(batch)
         loss = ce(pred, batch.y)
 
         valid_acc += accuracy(pred, batch.y)

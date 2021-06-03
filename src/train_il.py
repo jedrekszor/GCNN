@@ -36,7 +36,7 @@ def train(model, loader_training, loader_validation, epochs, device, learning_ra
 
             batch.to(device, non_blocking=True)
 
-            prediction = model(batch.x, batch.edge_index, batch.batch)
+            prediction = model(batch)
             loss = loss_function(prediction, batch.y)
 
             train_accuracy += accuracy(prediction, batch.y)
