@@ -6,24 +6,11 @@ import matplotlib.pyplot as plt
 from torchvision.datasets import ImageFolder
 from torch.utils.data import DataLoader
 from sklearn.metrics import confusion_matrix
-from src.resources import validate, data_transforms, accuracy, save_wrong, plot_confusion_matrix
-
-MODEL_LOAD = "../models/resnet18/resnet18_24_acc_0.91_loss_0.24456"
-
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-print("Device used: ", device)
-
-set_training = ImageFolder(TRAINING_DIR, transform=data_transforms(TRAINING_DIR))
-set_validation = ImageFolder(VALIDATION_DIR, transform=data_transforms(VALIDATION_DIR))
-set_test = ImageFolder(TEST_DIR, transform=data_transforms(TEST_DIR))
-
-loader_training = DataLoader(set_training, batch_size=BATCH_SIZE, shuffle=True, drop_last=True)
-loader_validation = DataLoader(set_validation, batch_size=BATCH_SIZE, shuffle=True, drop_last=True)
-loader_test = DataLoader(set_test, batch_size=BATCH_SIZE, shuffle=True, drop_last=True)
+from src.functions import validate, data_transforms, accuracy, save_wrong, plot_confusion_matrix
 
 
-def evaluate():
-    cnn = GCN().to(device)
+def validate(model, loader_training, loader_validation):
+    cnn = model
     cnn.load_state_dict(torch.load(MODEL_LOAD))
     ce = torch.nn.CrossEntropyLoss()
     if device.type == 'cuda':
@@ -109,5 +96,3 @@ def evaluate():
     plt.show()
     fig.savefig(MODEL_PATH + "/CM_val.png")
 
-
-evaluate()

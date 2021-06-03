@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 
 
-def validate(model, data, device, ce):  # accuracy
+def validate(model, data, device, ce):
     valid_acc = 0.0
     valid_loss = 0.0
 

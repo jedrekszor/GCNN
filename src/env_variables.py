@@ -1,4 +1,4 @@
-EPOCHS = 200
+EPOCHS = 300
 BATCH_SIZE = 8
 MARK = "test"
-MODEL_PATH = "../models/" + MARK
+MODEL_PATH = "../out/models/" + MARK
