@@ -1,18 +1,16 @@
 import torch
 import os
-from src.env_variables import TRAINING_DIR, VALIDATION_DIR, TEST_DIR, BATCH_SIZE, MODEL_PATH
+from src.env_variables import BATCH_SIZE, MODEL_PATH
 from src.model import GCN
 import matplotlib.pyplot as plt
 from torchvision.datasets import ImageFolder
 from torch.utils.data import DataLoader
 from sklearn.metrics import confusion_matrix
-from src.functions import validate, data_transforms, accuracy, save_wrong, plot_confusion_matrix
+from src.functions import accuracy, save_wrong, plot_confusion_matrix
 
 
-def validate(model, loader_training, loader_validation):
-    cnn = model
-    cnn.load_state_dict(torch.load(MODEL_LOAD))
-    ce = torch.nn.CrossEntropyLoss()
+def validate(model, loader_training, loader_validation, device, loss_function):
+    model = model.to(device, non_blocking=True)
     if device.type == 'cuda':
         print('Memory Usage:')
         print('Allocated:', round(torch.cuda.memory_allocated(0) / 1024 ** 3, 1), 'GB')
@@ -35,8 +33,8 @@ def validate(model, loader_training, loader_validation):
         images = images.to(device)
         labels = labels.to(device)
 
-        x = cnn(images)
-        loss = ce(x, labels)
+        x = model(images)
+        loss = loss_function(x, labels)
 
         value, pred = torch.max(x, 1)
         for j, k in enumerate(images):
@@ -64,8 +62,8 @@ def validate(model, loader_training, loader_validation):
         images = images.to(device)
         labels = labels.to(device)
 
-        x = cnn(images)
-        loss = ce(x, labels)
+        x = model(images)
+        loss = loss_function(x, labels)
 
         value, pred = torch.max(x, 1)
         for j, k in enumerate(images):

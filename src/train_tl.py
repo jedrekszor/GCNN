@@ -21,7 +21,7 @@ def train(model, graph, epochs, device, learning_rate, loss_function):
         print('Cached:   ', round(torch.cuda.memory_reserved(0) / 1024 ** 3, 1), 'GB')
 
     model.train()
-    batch_number = len(dataset)
+    batch_number = len(graph)
     min_valid_loss = np.Inf
     training_losses = []
     validation_losses = []

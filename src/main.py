@@ -10,7 +10,7 @@ from torch_geometric.data import DataLoader
 from src.env_variables import BATCH_SIZE, MARK, EPOCHS, MODEL_PATH
 from src.model import GCN
 from src.functions import validate, accuracy
-from src.train_li import train
+from src.train_il import train
 
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -29,7 +29,7 @@ model = GCN(64).to(device, non_blocking=True)
 
 train(model, loader_mnist_train, loader_mnist_val, EPOCHS, device, 1e-2, torch.nn.CrossEntropyLoss())
 
-validate(model, load, device, torch.nn.CrossEntropyLoss())
+validate(model, loader_mnist_train, loader_mnist_val, device, torch.nn.CrossEntropyLoss())
 
 
 # ### Experiment 2
@@ -38,7 +38,7 @@ model = GCN(64).to(device, non_blocking=True)
 
 train(model, loader_mnist_train, loader_mnist_val, EPOCHS, device, 1e-2, torch.nn.CrossEntropyLoss())
 
-validate(model, load, device, torch.nn.CrossEntropyLoss())
+validate(model, loader_mnist_train, loader_mnist_val, device, torch.nn.CrossEntropyLoss())
 
 
 # ### Experiment 3
