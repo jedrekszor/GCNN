@@ -1,10 +1,7 @@
 import torch
 import os
-from src.env_variables import BATCH_SIZE, MODEL_PATH
-from src.model import GCN
+from src.env_variables import MODEL_PATH
 import matplotlib.pyplot as plt
-from torchvision.datasets import ImageFolder
-from torch.utils.data import DataLoader
 from sklearn.metrics import confusion_matrix
 from src.functions import accuracy, save_wrong, plot_confusion_matrix
 

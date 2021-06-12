@@ -5,7 +5,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-
 def validate(model, data, device, ce):
     valid_acc = 0.0
     valid_loss = 0.0
@@ -22,6 +21,21 @@ def validate(model, data, device, ce):
     avg_valid_acc = valid_acc / len(data)
     avg_valid_loss = valid_loss / len(data)
     return avg_valid_acc, avg_valid_loss
+
+
+def validate_t(model, data, device, ce):
+    valid_acc = 0.0
+    valid_loss = 0.0
+
+    data = data.to(device)
+
+    pred = model(data)[data.test_mask]
+    loss = ce(pred, data.y[data.test_mask])
+
+    valid_acc += accuracy(pred, data.y[data.test_mask])
+    valid_loss += float(loss)
+
+    return valid_acc, valid_loss
 
 
 def accuracy(y_pred, y_true):
