@@ -37,9 +37,9 @@ dataset_planetoid = Planetoid("../planetoid", "Cora", transform=transform_t)
 dataset_planetoid_graph = dataset_planetoid[0]
 
 # ### Experiment 1
-model = GCN1(dataset_mnist_train).to(device, non_blocking=True)
-train(model, loader_mnist_train, loader_mnist_val, EPOCHS, device, 1e-2, torch.nn.CrossEntropyLoss())
-validate(model, loader_mnist_train, loader_mnist_val, device, F.nll_loss())
+# model = GCN1(dataset_mnist_train).to(device, non_blocking=True)
+# train(model, loader_mnist_train, loader_mnist_val, EPOCHS, device, 1e-2, torch.nn.CrossEntropyLoss())
+# validate(model, loader_mnist_train, loader_mnist_val, device, F.nll_loss())
 
 #
 # # ### Experiment 2
@@ -55,6 +55,6 @@ validate(model, loader_mnist_train, loader_mnist_val, device, F.nll_loss())
 #
 #
 # # ### Experiment 4
-# model = GCN_t2(dataset_planetoid).to(device, non_blocking=True)
-# train_t(model, dataset_planetoid_graph, EPOCHS, device, 1e-2, torch.nn.CrossEntropyLoss())
-# validate_t(model, dataset_planetoid_graph, device, torch.nn.CrossEntropyLoss())
+model = GCN_t2(dataset_planetoid).to(device, non_blocking=True)
+train_t(model, dataset_planetoid_graph, EPOCHS, device, 1e-2, torch.nn.CrossEntropyLoss())
+validate_t(model, dataset_planetoid_graph, device, torch.nn.CrossEntropyLoss())
