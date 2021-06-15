@@ -6,6 +6,7 @@ from src.env_variables import EPOCHS
 from src.model import GCN1, GCN2, GCN_t1, GCN_t2
 from src.evaluate import evaluate, evaluate_t
 from src.train import train, train_t
+from src.visualize import visualize, visualize_t
 
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -17,6 +18,9 @@ dataset_mnist_train, dataset_mnist_val = MNISTSuperpixels("../mnist", True, tran
 
 loader_mnist_train = DataLoader(dataset_mnist_train, batch_size=64, shuffle=True)
 loader_mnist_val = DataLoader(dataset_mnist_val, batch_size=64)
+
+print("Generating visualization")
+visualize(dataset_mnist)
 
 
 print("Preparing dataset Planetoid")
@@ -50,4 +54,3 @@ evaluate_t(model, dataset_planetoid_graph, device, torch.nn.CrossEntropyLoss())
 # model = GCN_t2(dataset_planetoid).to(device, non_blocking=True)
 # train_t(model, dataset_planetoid_graph, EPOCHS, device, 1e-2, torch.nn.CrossEntropyLoss())
 # validate_t(model, dataset_planetoid_graph, device, torch.nn.CrossEntropyLoss())
-
