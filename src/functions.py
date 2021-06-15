@@ -45,20 +45,14 @@ def accuracy(y_pred, y_true):
     return torch.mean(equals.type(torch.FloatTensor))
 
 
-def save_wrong(id, image, pred, true, path, set):
-    img = T.functional.to_pil_image(image)
-    img.save(path + "/wrong/" + set + "/" + "{}_pred_{}_actual_{}.png".format(
-        id, pred, true))
-
-
 def plot_confusion_matrix(cm, classes, title='Confusion matrix', cmap=plt.cm.Blues):
     print(cm)
     plt.imshow(cm, interpolation='nearest', cmap=cmap)
     plt.title(title)
     plt.colorbar()
-    tick_marks = np.arange(len(classes))
-    plt.xticks(tick_marks, classes, rotation=45)
-    plt.yticks(tick_marks, classes)
+    tick_marks = np.arange(classes)
+    plt.xticks(tick_marks, rotation=45)
+    plt.yticks(tick_marks)
 
     thresh = cm.max() / 2.
     for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):

@@ -1,26 +1,17 @@
-import os
-import copy
-import numpy as np
-import matplotlib.pyplot as plt
-
 import torch
 from torch_geometric.datasets import MNISTSuperpixels, Planetoid
 from torch_geometric.data import DataLoader
 import torch_geometric.transforms as T
-from src.env_variables import BATCH_SIZE, MARK, EPOCHS, MODEL_PATH
+from src.env_variables import EPOCHS
 from src.model import GCN1, GCN2, GCN_t1, GCN_t2
-from src.functions import validate, accuracy, validate_t
+from src.evaluate import evaluate, evaluate_t
 from src.train import train, train_t
-import torch.nn.functional as F
 
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print("Device used: ", device)
 
 print("Preparing dataset MNIST")
-dataset_mnist = MNISTSuperpixels(root="../mnist")
-dataset_mnist = dataset_mnist.shuffle()
-
 transform = T.Cartesian(cat=False)
 dataset_mnist_train, dataset_mnist_val = MNISTSuperpixels("../mnist", True, transform=transform), MNISTSuperpixels("../mnist", False, transform=transform)
 
@@ -39,22 +30,24 @@ dataset_planetoid_graph = dataset_planetoid[0]
 # ### Experiment 1
 # model = GCN1(dataset_mnist_train).to(device, non_blocking=True)
 # train(model, loader_mnist_train, loader_mnist_val, EPOCHS, device, 1e-2, torch.nn.CrossEntropyLoss())
-# validate(model, loader_mnist_train, loader_mnist_val, device, F.nll_loss())
+# evaluate(model, loader_mnist_train, loader_mnist_val, device, torch.nn.CrossEntropyLoss(), dataset_mnist_train.num_classes)
 
-#
-# # ### Experiment 2
+
+# ### Experiment 2
 # model = GCN2(dataset_mnist_train).to(device, non_blocking=True)
 # train(model, loader_mnist_train, loader_mnist_val, EPOCHS, device, 1e-2, torch.nn.CrossEntropyLoss())
-# validate(model, loader_mnist_train, loader_mnist_val, device, F.nll_loss())
-#
-#
-# # ### Experiment 3
-# model = GCN_t1(dataset_planetoid).to(device, non_blocking=True)
+# evaluate(model, loader_mnist_train, loader_mnist_val, device, torch.nn.CrossEntropyLoss(), dataset_mnist_train.num_classes)
+
+
+# ### Experiment 3
+model = GCN_t1(dataset_planetoid).to(device, non_blocking=True)
+model.load_state_dict(torch.load("../out/models/e2/e2_32_acc_0.91_loss_0.31032"))
 # train_t(model, dataset_planetoid_graph, EPOCHS, device, 1e-2, torch.nn.CrossEntropyLoss())
-# validate_t(model, dataset_planetoid_graph, device, torch.nn.CrossEntropyLoss())
+evaluate_t(model, dataset_planetoid_graph, device, torch.nn.CrossEntropyLoss())
 #
 #
 # # ### Experiment 4
-model = GCN_t2(dataset_planetoid).to(device, non_blocking=True)
-train_t(model, dataset_planetoid_graph, EPOCHS, device, 1e-2, torch.nn.CrossEntropyLoss())
-validate_t(model, dataset_planetoid_graph, device, torch.nn.CrossEntropyLoss())
+# model = GCN_t2(dataset_planetoid).to(device, non_blocking=True)
+# train_t(model, dataset_planetoid_graph, EPOCHS, device, 1e-2, torch.nn.CrossEntropyLoss())
+# validate_t(model, dataset_planetoid_graph, device, torch.nn.CrossEntropyLoss())
+
